@@ -1,0 +1,29 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: '30 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 23f3000113@ds.study.iitm.ac.in
+        run: |
+          echo "Last updated at $(date -u)" > timestamp.txt
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Action Bot"
+          git config user.email "action@github.com"
+          git pull --rebase origin main
+          git add timestamp.txt
+          git commit -m "Daily commit from GitHub Actions" || echo "No changes to commit"
+          git push
